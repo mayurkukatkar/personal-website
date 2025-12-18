@@ -28,7 +28,7 @@ async function main() {
       - **Buffering**: Kafka partitioned topics
       - **Processing**: Go consumers with worker pools
       - **Storage**: Time-series optimized Redis layer`,
-            techStack: JSON.stringify(["Go", "Kafka", "Protobuf", "Redis"]),
+            techStack: ["Go", "Kafka", "Protobuf", "Redis"],
             featured: true,
             status: "PUBLISHED",
             order: 1
@@ -50,7 +50,7 @@ async function main() {
       - Double-entry bookkeeping
       - Idempotency keys
       - Automated reconciliation jobs`,
-            techStack: JSON.stringify(["Java", "Spring Boot", "PostgreSQL", "Temporal"]),
+            techStack: ["Java", "Spring Boot", "PostgreSQL", "Temporal"],
             featured: true,
             status: "PUBLISHED",
             order: 2
@@ -67,7 +67,7 @@ async function main() {
       
       ## Solution
       Built a high-performance authorization gateway using OPA (Open Policy Agent) and JWT verification. Centralized policy management decoupled from business logic.`,
-            techStack: JSON.stringify(["Rust", "OPA", "Docker", "Kubernetes"]),
+            techStack: ["Rust", "OPA", "Docker", "Kubernetes"],
             featured: true,
             status: "PUBLISHED",
             order: 3
@@ -116,7 +116,7 @@ async function main() {
             description: "Leading the migration from monolithic architecture to microservices. Improved transaction processing speed by 40% and reduced downtime to near-zero.",
             startDate: new Date("2022-01-01"),
             current: true,
-            techUsed: JSON.stringify(["Java", "Spring Cloud", "Kafka", "AWS"]),
+            techUsed: ["Java", "Spring Cloud", "Kafka", "AWS"],
             order: 1
         }
     })
@@ -129,7 +129,7 @@ async function main() {
             startDate: new Date("2019-01-01"),
             endDate: new Date("2022-01-01"),
             current: false,
-            techUsed: JSON.stringify(["Java", "GCP", "Apache Beam", "BigQuery"]),
+            techUsed: ["Java", "GCP", "Apache Beam", "BigQuery"],
             order: 2
         }
     })
