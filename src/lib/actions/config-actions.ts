@@ -34,18 +34,31 @@ export async function updateConfig(formData: FormData) {
     }
 
     try {
-        await prisma.config.upsert({
-            where: { id: "site-config" },
-            update: validatedFields.data,
-            create: {
-                id: "site-config",
-                ...validatedFields.data,
-                avatarUrl: validatedFields.data.avatarUrl || null,
-                githubUrl: validatedFields.data.githubUrl || null,
-                linkedinUrl: validatedFields.data.linkedinUrl || null,
-                resumeUrl: validatedFields.data.resumeUrl || null
-            },
-        })
+        // Find existing config or create new
+        const existingConfig = await prisma.config.findFirst()
+
+        if (existingConfig) {
+            await prisma.config.update({
+                where: { id: existingConfig.id },
+                data: {
+                    ...validatedFields.data,
+                    avatarUrl: validatedFields.data.avatarUrl || null,
+                    githubUrl: validatedFields.data.githubUrl || null,
+                    linkedinUrl: validatedFields.data.linkedinUrl || null,
+                    resumeUrl: validatedFields.data.resumeUrl || null
+                }
+            })
+        } else {
+            await prisma.config.create({
+                data: {
+                    ...validatedFields.data,
+                    avatarUrl: validatedFields.data.avatarUrl || null,
+                    githubUrl: validatedFields.data.githubUrl || null,
+                    linkedinUrl: validatedFields.data.linkedinUrl || null,
+                    resumeUrl: validatedFields.data.resumeUrl || null
+                }
+            })
+        }
 
         revalidatePath("/")
         return { success: true }

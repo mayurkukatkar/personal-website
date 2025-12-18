@@ -137,7 +137,7 @@ async function main() {
     // 4. Config
     await prisma.config.create({
         data: {
-            id: "default",
+            // id is auto-generated
             heroTitle: "Building robust distributed systems at scale.",
             heroSubtitle: "I design and implement high-performance backend architectures, microservices, and reliable APIs. Focused on stability, scalability, and clean code.",
             contactEmail: "hello@example.com",
