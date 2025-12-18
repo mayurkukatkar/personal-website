@@ -42,7 +42,7 @@ export default async function ProjectsPage() {
                                     <div className="text-xs text-text-secondary truncate max-w-[200px]">{project.slug}</div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <Badge variant={project.status === "PUBLISHED" ? "default" : "secondary"}>
+                                    <Badge variant={project.status === "PUBLISHED" ? "primary" : "secondary"}>
                                         {project.status}
                                     </Badge>
                                 </td>
