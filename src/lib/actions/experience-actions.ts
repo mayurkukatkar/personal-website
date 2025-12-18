@@ -20,9 +20,9 @@ export async function deleteExperience(id: string) {
     try {
         await prisma.experience.delete({ where: { id } })
         revalidatePath("/admin/experience")
-        return { success: true }
+        revalidatePath("/admin/experience")
     } catch (error) {
-        return { success: false, error: "Failed to delete experience" }
+        console.error("Failed to delete experience", error)
     }
 }
 
@@ -48,6 +48,7 @@ export async function createExperience(prevState: any, formData: FormData) {
                 ...validatedFields.data,
                 startDate: new Date(validatedFields.data.startDate),
                 endDate: validatedFields.data.endDate ? new Date(validatedFields.data.endDate) : null,
+                techUsed: validatedFields.data.techUsed ? JSON.parse(validatedFields.data.techUsed) : [],
             },
         })
     } catch (error) {
@@ -80,7 +81,7 @@ export async function updateExperience(id: string, prevState: any, formData: For
             data: {
                 ...validatedFields.data,
                 startDate: new Date(validatedFields.data.startDate),
-                endDate: validatedFields.data.endDate ? new Date(validatedFields.data.endDate) : null,
+                techUsed: validatedFields.data.techUsed ? JSON.parse(validatedFields.data.techUsed) : [],
             },
         })
     } catch (error) {

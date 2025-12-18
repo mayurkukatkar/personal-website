@@ -48,13 +48,13 @@ export default async function ProjectsPage() {
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="flex flex-wrap gap-1">
-                                        {JSON.parse(project.techStack || "[]").slice(0, 3).map((tech: string) => (
+                                        {(project.techStack || []).slice(0, 3).map((tech: string) => (
                                             <span key={tech} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
                                                 {tech}
                                             </span>
                                         ))}
-                                        {JSON.parse(project.techStack || "[]").length > 3 && (
-                                            <span className="text-xs text-gray-400 pl-1">+{JSON.parse(project.techStack || "[]").length - 3}</span>
+                                        {(project.techStack || []).length > 3 && (
+                                            <span className="text-xs text-gray-400 pl-1">+{(project.techStack || []).length - 3}</span>
                                         )}
                                     </div>
                                 </td>

@@ -8,6 +8,7 @@ import { z } from "zod"
 const SkillSchema = z.object({
     name: z.string().min(1, "Name is required"),
     category: z.string().min(1, "Category is required"),
+    icon: z.string().optional(),
     proficiency: z.coerce.number().min(1).max(5).optional(),
     order: z.coerce.number().optional(),
 })
@@ -16,9 +17,9 @@ export async function deleteSkill(id: string) {
     try {
         await prisma.skill.delete({ where: { id } })
         revalidatePath("/admin/skills")
-        return { success: true }
+        revalidatePath("/admin/skills")
     } catch (error) {
-        return { success: false, error: "Failed to delete skill" }
+        console.error("Failed to delete skill", error)
     }
 }
 
@@ -26,6 +27,7 @@ export async function createSkill(prevState: any, formData: FormData) {
     const validatedFields = SkillSchema.safeParse({
         name: formData.get("name"),
         category: formData.get("category"),
+        icon: formData.get("icon"),
         proficiency: formData.get("proficiency"),
         order: formData.get("order"),
     })
@@ -48,6 +50,7 @@ export async function updateSkill(id: string, prevState: any, formData: FormData
     const validatedFields = SkillSchema.safeParse({
         name: formData.get("name"),
         category: formData.get("category"),
+        icon: formData.get("icon"),
         proficiency: formData.get("proficiency"),
         order: formData.get("order"),
     })

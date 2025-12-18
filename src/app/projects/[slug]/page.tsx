@@ -16,7 +16,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
         notFound()
     }
 
-    const techStack = JSON.parse(project.techStack || "[]")
+    const techStack = project.techStack || []
 
     return (
         <main className="min-h-screen bg-background text-text-primary">

@@ -17,6 +17,7 @@ model Project {
   title            String
   slug             String   @unique
   shortDescription String
+  longDescription  String
   heroImage        String?
   galleryImages    String[]
   techStack        String[]
@@ -38,7 +39,7 @@ model Skill {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   name              String
   category          String
-  icon              String
+  icon              String   @default("code")
   proficiency       Int      @default(1) // 1-5
   yearsOfExperience Int      @default(0)
   order             Int      @default(0)

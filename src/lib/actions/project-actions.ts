@@ -26,9 +26,9 @@ export async function deleteProject(id: string) {
             where: { id },
         })
         revalidatePath("/admin/projects")
-        return { success: true }
+        revalidatePath("/admin/projects")
     } catch (error) {
-        return { success: false, error: "Failed to delete project" }
+        console.error("Failed to delete project", error)
     }
 }
 
@@ -65,7 +65,7 @@ export async function createProject(prevState: any, formData: FormData) {
             data: {
                 ...validatedFields.data,
                 galleryImages: galleryImages,
-                techStack: validatedFields.data.techStack || "[]",
+                techStack: validatedFields.data.techStack ? JSON.parse(validatedFields.data.techStack) : [],
             },
         })
     } catch (error) {
@@ -110,7 +110,7 @@ export async function updateProject(id: string, prevState: any, formData: FormDa
             data: {
                 ...validatedFields.data,
                 galleryImages: galleryImages,
-                techStack: validatedFields.data.techStack || "[]",
+                techStack: validatedFields.data.techStack ? JSON.parse(validatedFields.data.techStack) : [],
             },
         })
     } catch (error) {

@@ -101,6 +101,7 @@ async function main() {
                 data: {
                     name: item,
                     category: group.category,
+                    icon: "code", // Default icon
                     order: skillOrder++
                 }
             })
