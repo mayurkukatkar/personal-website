@@ -40,7 +40,7 @@ export const Experience = ({ experience }: ExperienceProps) => {
                                     {exp.description}
                                 </p>
                                 <div className="flex flex-wrap gap-2 pt-2">
-                                    {JSON.parse(exp.techUsed || "[]").map((tech: string) => (
+                                    {(exp.techUsed || []).map((tech: string) => (
                                         <span key={tech} className="text-xs text-text-secondary px-2 py-1 bg-gray-50 rounded border border-border/50">
                                             {tech}
                                         </span>

@@ -68,7 +68,7 @@ export const Projects = ({ projects }: ProjectsProps) => {
                             {/* Tech Stack */}
                             <div className="mt-8 pt-8 border-t border-border">
                                 <div className="flex flex-wrap gap-2">
-                                    {JSON.parse(project.techStack || "[]").map((tech: string) => (
+                                    {(project.techStack || []).map((tech: string) => (
                                         <Badge key={tech} className="bg-gray-50 text-text-secondary border-border font-mono text-xs hover:bg-primary/5 hover:text-primary hover:border-primary/20 transition-colors">
                                             {tech}
                                         </Badge>
