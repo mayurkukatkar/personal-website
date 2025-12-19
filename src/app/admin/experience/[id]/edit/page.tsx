@@ -11,11 +11,18 @@ export default async function EditExperiencePage({ params }: { params: { id: str
         notFound()
     }
 
+    // Serialize dates
+    const serializedExperience = {
+        ...experience,
+        startDate: experience.startDate.toISOString(),
+        endDate: experience.endDate ? experience.endDate.toISOString() : null,
+    }
+
     return (
         <div className="space-y-6">
             <h1 className="text-2xl font-bold text-text-primary">Edit Experience</h1>
             <div className="bg-white p-6 rounded-xl border border-border max-w-xl">
-                <ExperienceForm experience={experience} isEdit />
+                <ExperienceForm experience={serializedExperience} isEdit />
             </div>
         </div>
     )

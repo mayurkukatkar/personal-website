@@ -81,7 +81,7 @@ export default function ExperienceForm({ experience, isEdit }: ExperienceFormPro
                 <label className="text-sm font-medium">Tech Used (JSON Array)</label>
                 <input
                     name="techUsed"
-                    defaultValue={experience?.techUsed || '["Java"]'}
+                    defaultValue={experience?.techUsed ? JSON.stringify(experience.techUsed) : '["Java"]'}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 />
             </div>
