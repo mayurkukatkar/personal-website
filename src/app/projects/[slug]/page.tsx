@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge"
 import { Navbar } from "@/components/layout/navbar"
 import { ArrowLeft, Github, ExternalLink } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
+import ReactMarkdown from "react-markdown"
 
 export const revalidate = 60
 
@@ -18,6 +20,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     }
 
     const techStack = project.techStack || []
+    const galleryImages = project.galleryImages || []
 
     return (
         <main className="min-h-screen bg-background text-text-primary">
@@ -61,16 +64,42 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     </div>
                 </div>
 
+                {/* Hero Image */}
+                {project.heroImage && (
+                    <div className="mb-12 rounded-xl overflow-hidden border border-border relative aspect-video bg-surface">
+                        <Image
+                            src={project.heroImage}
+                            alt={project.title}
+                            fill
+                            className="object-cover"
+                            priority
+                        />
+                    </div>
+                )}
+
                 {/* Content */}
                 <div className="prose prose-slate max-w-none prose-lg prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary hover:prose-a:text-primary/80">
-                    {/* We would render Markdown here. For now, just robust text display or simple dangerouslySetInnerHTML if trusted, 
-               but ideally we use a library like react-markdown. Given the constraints, I will split by newlines for basic formatting. */}
-                    {project.longDescription.split('\n').map((paragraph, i) => (
-                        <p key={i} className="mb-4 text-text-secondary leading-relaxed">
-                            {paragraph}
-                        </p>
-                    ))}
+                    <ReactMarkdown>{project.longDescription}</ReactMarkdown>
                 </div>
+
+                {/* Gallery */}
+                {galleryImages.length > 0 && (
+                    <div className="mt-16 space-y-8">
+                        <h2 className="text-2xl font-bold text-text-primary">Gallery</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {galleryImages.map((img, index) => (
+                                <div key={index} className="relative aspect-video rounded-lg overflow-hidden border border-border bg-surface">
+                                    <Image
+                                        src={img}
+                                        alt={`${project.title} screenshot ${index + 1}`}
+                                        fill
+                                        className="object-cover hover:scale-105 transition-transform duration-500"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </article>
         </main>
     )
