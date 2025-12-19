@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -25,8 +26,20 @@ export const Projects = ({ projects }: ProjectsProps) => {
                     {projects.map((project, index) => (
                         <Card
                             key={project.id}
-                            className="p-8 md:p-10 flex flex-col h-full bg-surface border-border hover:border-primary/30 transition-all duration-300 group relative"
+                            className="p-8 md:p-10 flex flex-col h-full bg-surface border-border hover:border-primary/30 transition-all duration-300 group relative overflow-hidden"
                         >
+                            {/* Project Image */}
+                            {project.heroImage && (
+                                <div className="w-full h-48 relative mb-6 rounded-lg overflow-hidden border border-border/50">
+                                    <Image
+                                        src={project.heroImage}
+                                        alt={project.title}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                </div>
+                            )}
+
                             {/* Header */}
                             <div className="flex justify-between items-start mb-6">
                                 <div>

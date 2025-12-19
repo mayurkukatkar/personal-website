@@ -2,21 +2,18 @@ import Prisma from "@/lib/prisma"
 import ProjectForm from "@/components/admin/project-form"
 import { notFound } from "next/navigation"
 
-export default async function EditProjectPage({ params }: { params: { id: string } }) {
+export default async function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
     const project = await Prisma.project.findUnique({
-        where: { id: params.id },
+        where: { id },
     })
 
     if (!project) {
         notFound()
     }
 
-    // Serialize dates
-    const serializedProject = {
-        ...project,
-        createdAt: project.createdAt.toISOString(),
-        updatedAt: project.updatedAt.toISOString(),
-    }
+    // Robust serialization
+    const serializedProject = JSON.parse(JSON.stringify(project))
 
     return (
         <div className="space-y-6">

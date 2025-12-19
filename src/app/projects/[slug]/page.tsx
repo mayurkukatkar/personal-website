@@ -7,9 +7,10 @@ import Link from "next/link"
 
 export const revalidate = 60
 
-export default async function ProjectPage({ params }: { params: { slug: string } }) {
+export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params
     const project = await prisma.project.findFirst({
-        where: { slug: params.slug },
+        where: { slug },
     })
 
     if (!project) {

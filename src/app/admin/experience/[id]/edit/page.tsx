@@ -2,21 +2,18 @@ import Prisma from "@/lib/prisma"
 import ExperienceForm from "@/components/admin/experience-form"
 import { notFound } from "next/navigation"
 
-export default async function EditExperiencePage({ params }: { params: { id: string } }) {
+export default async function EditExperiencePage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
     const experience = await Prisma.experience.findUnique({
-        where: { id: params.id },
+        where: { id },
     })
 
     if (!experience) {
         notFound()
     }
 
-    // Serialize dates
-    const serializedExperience = {
-        ...experience,
-        startDate: experience.startDate.toISOString(),
-        endDate: experience.endDate ? experience.endDate.toISOString() : null,
-    }
+    // Robust serialization
+    const serializedExperience = JSON.parse(JSON.stringify(experience))
 
     return (
         <div className="space-y-6">
