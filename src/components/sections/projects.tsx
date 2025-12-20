@@ -52,94 +52,104 @@ export const Projects = ({ projects }: ProjectsProps) => {
                 >
                     {projects.map((project, index) => (
                         <motion.div key={project.id} variants={item} className="h-full">
-                            <Link href={`/projects/${project.slug}`} className="block h-full cursor-pointer group/card">
-                                <SpotlightCard className="h-full bg-surface/50 backdrop-blur-xl border-border/50 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500">
-                                    <div className="flex flex-col h-full">
-                                        {/* Image Section with Overlay */}
-                                        <div className="relative w-full h-64 overflow-hidden border-b border-border/50">
-                                            {project.heroImage ? (
-                                                <Image
-                                                    src={project.heroImage}
-                                                    alt={project.title}
-                                                    fill
-                                                    className="object-cover group-hover/card:scale-105 transition-transform duration-700 ease-out"
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full bg-secondary/20 flex items-center justify-center text-text-secondary/30">
-                                                    <span className="font-mono text-sm">No Preview Available</span>
-                                                </div>
-                                            )}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 group-hover/card:opacity-40 transition-opacity duration-500" />
-
+                            <SpotlightCard className="h-full bg-white dark:bg-zinc-900 border-border/50 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group/card">
+                                {/* Image Section */}
+                                <div className="relative w-full h-56 overflow-hidden border-b border-border/10">
+                                    {project.heroImage ? (
+                                        <Image
+                                            src={project.heroImage}
+                                            alt={project.title}
+                                            fill
+                                            className="object-cover group-hover/card:scale-105 transition-transform duration-700 ease-out"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-secondary/20 flex items-center justify-center text-text-secondary/30">
+                                            <span className="font-mono text-sm">No Preview</span>
                                         </div>
+                                    )}
 
-                                        {/* Content Section */}
-                                        <div className="p-8 flex flex-col flex-1">
-                                            <div className="mb-6">
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <h3 className="text-2xl font-bold text-text-primary group-hover/card:text-primary transition-colors flex items-center gap-2">
-                                                        {project.title}
-                                                        <ArrowRight size={16} className="-translate-x-2 opacity-0 group-hover/card:opacity-100 group-hover/card:translate-x-0 transition-all duration-300 text-primary" />
-                                                    </h3>
-                                                </div>
-                                                <p className="text-text-secondary leading-relaxed line-clamp-2 text-sm md:text-base">
-                                                    {project.shortDescription}
-                                                </p>
-                                            </div>
+                                    {/* Overlay Gradient */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-60" />
 
-                                            {/* Tech Stack area */}
-                                            <div className="mt-auto space-y-6">
-                                                <div className="pt-6 border-t border-border/40">
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {(project.techStack || []).slice(0, 4).map((tech: string) => (
-                                                            <Badge
-                                                                key={tech}
-                                                                variant="secondary"
-                                                                className="bg-secondary/40 text-text-secondary border-transparent text-[11px] px-2.5 py-1 font-mono tracking-tight"
-                                                            >
-                                                                {tech}
-                                                            </Badge>
-                                                        ))}
-                                                        {(project.techStack || []).length > 4 && (
-                                                            <span className="text-xs text-text-secondary/60 flex items-center px-2">
-                                                                +{(project.techStack || []).length - 4} more
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                {/* Actions Footer */}
-                                                <div className="flex gap-3">
-                                                    {project.githubUrl && (
-                                                        <a
-                                                            href={project.githubUrl}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 hover:bg-secondary text-sm font-medium text-text-primary transition-colors border border-border/50 hover:border-border"
-                                                            onClick={(e) => e.stopPropagation()}
-                                                        >
-                                                            <Github size={16} />
-                                                            <span>Code</span>
-                                                        </a>
-                                                    )}
-                                                    {project.liveUrl && (
-                                                        <a
-                                                            href={project.liveUrl}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-sm font-medium text-primary transition-colors border border-primary/20 hover:border-primary/30"
-                                                            onClick={(e) => e.stopPropagation()}
-                                                        >
-                                                            <ExternalLink size={16} />
-                                                            <span>Live Demo</span>
-                                                        </a>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
+                                    {/* Top Left Badge: Status */}
+                                    <div className="absolute top-4 left-4">
+                                        <Badge
+                                            variant={project.status === 'PUBLISHED' ? 'primary' : 'secondary'}
+                                            className="bg-white/90 text-black shadow-sm backdrop-blur-md px-3 py-1 text-xs font-bold rounded-full"
+                                        >
+                                            {project.status === 'PUBLISHED' ? 'Live' : project.status}
+                                        </Badge>
                                     </div>
-                                </SpotlightCard>
-                            </Link>
+
+                                    {/* Bottom Left Badge: Category/Primary Tech */}
+                                    <div className="absolute bottom-4 left-4">
+                                        <Badge className="bg-zinc-800/90 text-white border-0 backdrop-blur-md px-3 py-1 text-xs font-medium rounded-full">
+                                            {project.techStack?.[0] || 'Project'}
+                                        </Badge>
+                                    </div>
+                                </div>
+
+                                {/* Content Section */}
+                                <div className="p-6 flex flex-col flex-1">
+                                    <div className="flex justify-between items-start mb-3">
+                                        <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 group-hover/card:text-primary transition-colors">
+                                            {project.title}
+                                        </h3>
+                                    </div>
+
+                                    <p className="text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
+                                        {project.shortDescription}
+                                    </p>
+
+                                    {/* Tech Stack Pills */}
+                                    <div className="flex flex-wrap gap-2 mb-8">
+                                        {(project.techStack || []).slice(0, 4).map((tech: string) => (
+                                            <span
+                                                key={tech}
+                                                className="px-3 py-1 rounded-full text-[11px] font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300"
+                                            >
+                                                {tech}
+                                            </span>
+                                        ))}
+                                        {(project.techStack || []).length > 4 && (
+                                            <span className="px-2 py-1 text-[11px] text-zinc-500 font-medium">
+                                                +{(project.techStack || []).length - 4}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    {/* Footer / Actions */}
+                                    <div className="mt-auto pt-6 border-t border-border/10 flex items-center gap-4">
+                                        {project.githubUrl && (
+                                            <a
+                                                href={project.githubUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border/40 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-sm font-semibold text-text-primary"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <Github size={18} />
+                                                Code
+                                            </a>
+                                        )}
+                                        {project.liveUrl && (
+                                            <a
+                                                href={project.liveUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity text-sm font-semibold"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                {/* Play icon lookalike for 'Demo' */}
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                                                    <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
+                                                </svg>
+                                                Demo
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+                            </SpotlightCard>
                         </motion.div>
                     ))}
                 </motion.div>
