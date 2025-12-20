@@ -71,31 +71,6 @@ export const Projects = ({ projects }: ProjectsProps) => {
                                             )}
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 group-hover/card:opacity-40 transition-opacity duration-500" />
 
-                                            {/* Floating Links on Image */}
-                                            <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover/card:translate-y-0">
-                                                {project.githubUrl && (
-                                                    <a
-                                                        href={project.githubUrl}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="p-2 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-white/20 transition-colors border border-white/10"
-                                                        onClick={(e) => e.stopPropagation()}
-                                                    >
-                                                        <Github size={18} />
-                                                    </a>
-                                                )}
-                                                {project.liveUrl && (
-                                                    <a
-                                                        href={project.liveUrl}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="p-2 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-white/20 transition-colors border border-white/10"
-                                                        onClick={(e) => e.stopPropagation()}
-                                                    >
-                                                        <ExternalLink size={18} />
-                                                    </a>
-                                                )}
-                                            </div>
                                         </div>
 
                                         {/* Content Section */}
@@ -113,21 +88,51 @@ export const Projects = ({ projects }: ProjectsProps) => {
                                             </div>
 
                                             {/* Tech Stack area */}
-                                            <div className="mt-auto pt-6 border-t border-border/40">
-                                                <div className="flex flex-wrap gap-2">
-                                                    {(project.techStack || []).slice(0, 4).map((tech: string) => (
-                                                        <Badge
-                                                            key={tech}
-                                                            variant="secondary"
-                                                            className="bg-secondary/40 text-text-secondary border-transparent text-[11px] px-2.5 py-1 font-mono tracking-tight"
+                                            <div className="mt-auto space-y-6">
+                                                <div className="pt-6 border-t border-border/40">
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {(project.techStack || []).slice(0, 4).map((tech: string) => (
+                                                            <Badge
+                                                                key={tech}
+                                                                variant="secondary"
+                                                                className="bg-secondary/40 text-text-secondary border-transparent text-[11px] px-2.5 py-1 font-mono tracking-tight"
+                                                            >
+                                                                {tech}
+                                                            </Badge>
+                                                        ))}
+                                                        {(project.techStack || []).length > 4 && (
+                                                            <span className="text-xs text-text-secondary/60 flex items-center px-2">
+                                                                +{(project.techStack || []).length - 4} more
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                {/* Actions Footer */}
+                                                <div className="flex gap-3">
+                                                    {project.githubUrl && (
+                                                        <a
+                                                            href={project.githubUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-secondary/50 hover:bg-secondary text-sm font-medium text-text-primary transition-colors border border-border/50 hover:border-border"
+                                                            onClick={(e) => e.stopPropagation()}
                                                         >
-                                                            {tech}
-                                                        </Badge>
-                                                    ))}
-                                                    {(project.techStack || []).length > 4 && (
-                                                        <span className="text-xs text-text-secondary/60 flex items-center px-2">
-                                                            +{(project.techStack || []).length - 4} more
-                                                        </span>
+                                                            <Github size={16} />
+                                                            <span>Code</span>
+                                                        </a>
+                                                    )}
+                                                    {project.liveUrl && (
+                                                        <a
+                                                            href={project.liveUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-sm font-medium text-primary transition-colors border border-primary/20 hover:border-primary/30"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        >
+                                                            <ExternalLink size={16} />
+                                                            <span>Live Demo</span>
+                                                        </a>
                                                     )}
                                                 </div>
                                             </div>
