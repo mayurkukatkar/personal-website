@@ -7,6 +7,10 @@ interface SkillsProps {
 }
 
 export const Skills = ({ skills }: SkillsProps) => {
+    if (!skills || skills.length === 0) {
+        return null
+    }
+
     // Group skills by category
     const groupedSkills = skills.reduce((acc, skill) => {
         const category = skill.category || "Other"
@@ -15,11 +19,17 @@ export const Skills = ({ skills }: SkillsProps) => {
         return acc
     }, {} as Record<string, typeof skills>)
 
-    // Sort categories if needed, or rely on insert order?
-    // Let's hardcode the category order for display consistency if possible, or just Object.entries
     const CATEGORY_ORDER = ["Backend Engineering", "Databases & Storage", "DevOps & Infrastructure", "Tools & Testing", "Frontend"]
+
+    // Sort keys: defined order first, then alphabetical for others
     const sortedCategories = Object.keys(groupedSkills).sort((a, b) => {
-        return CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b)
+        const indexA = CATEGORY_ORDER.indexOf(a)
+        const indexB = CATEGORY_ORDER.indexOf(b)
+
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB
+        if (indexA !== -1) return -1
+        if (indexB !== -1) return 1
+        return a.localeCompare(b)
     })
 
     return (
