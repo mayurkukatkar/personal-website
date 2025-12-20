@@ -89,6 +89,7 @@ export function ProjectImportDialog() {
                 description: `${repo.name} has been imported as a Draft.`,
             })
             setOpen(false) // Close on success
+            router.refresh() // Force refresh data
 
         } catch (err) {
             console.error(err)
