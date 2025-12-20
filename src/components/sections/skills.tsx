@@ -1,9 +1,9 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { motion } from "framer-motion";
-import { Server, Database, Cloud, Wrench, Layout, Terminal, Code2, Smartphone, Globe } from "lucide-react";
+import { Server, Database, Cloud, Wrench, Layout, Terminal, Code2, Smartphone, Globe, Cpu } from "lucide-react";
 
 interface SkillsProps {
     skills: any[]
@@ -18,6 +18,7 @@ const CategoryIcons: Record<string, any> = {
     "Mobile Development": Smartphone,
     "Languages": Code2,
     "Web Technologies": Globe,
+    "Computer Science": Cpu,
     "Other": Terminal
 }
 
@@ -64,12 +65,22 @@ export const Skills = ({ skills }: SkillsProps) => {
 
     return (
         <section id="skills" className="py-24 bg-surface border-y border-border relative overflow-hidden">
-            <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+            {/* Background Grid with Mask */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] -z-10" />
+
             <div className="max-w-7xl mx-auto px-6">
-                <div className="mb-16 text-center md:text-left">
-                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-text-primary mb-4">Technical Proficiency</h2>
+                <div className="mb-16 text-center md:text-left relative">
+                    <div className="absolute -top-10 -left-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl -z-10 animate-pulse" />
+                    <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-text-primary mb-6">
+                        Technical <span className="text-primary relative inline-block">
+                            Proficiency
+                            <svg className="absolute w-full h-3 -bottom-1 left-0 text-primary/20" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                <path d="M0 5 Q 50 10 100 5 L 100 0 Q 50 5 0 0 Z" fill="currentColor" />
+                            </svg>
+                        </span>
+                    </h2>
                     <p className="text-lg text-text-secondary max-w-2xl mx-auto md:mx-0 leading-relaxed">
-                        A comprehensive overview of the production-grade technologies I leverage to architect scalable, resilient systems.
+                        Mastery over a diverse set of production-grade technologies, enabling the architecture of scalable, resilient, and high-performance systems.
                     </p>
                 </div>
 
@@ -77,24 +88,25 @@ export const Skills = ({ skills }: SkillsProps) => {
                     variants={container}
                     initial="hidden"
                     whileInView="show"
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                    viewport={{ once: true, margin: "-50px" }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                 >
                     {sortedCategories.map((category) => {
                         const Icon = CategoryIcons[category] || Terminal;
                         return (
-                            <motion.div key={category} variants={item}>
-                                <Card className="h-full border-border/60 bg-white/50 backdrop-blur-sm hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
-                                    <CardHeader className="flex flex-row items-center gap-4 pb-4 border-b border-border/40">
-                                        <div className="p-2.5 rounded-lg bg-secondary/30 text-primary">
-                                            <Icon size={20} />
+                            <motion.div key={category} variants={item} className="h-full">
+                                <SpotlightCard className="h-full bg-white/80 backdrop-blur-xl hover:shadow-xl transition-all duration-500 border-border/40">
+                                    <div className="p-6 h-full flex flex-col">
+                                        <div className="flex items-center gap-4 mb-6">
+                                            <div className="p-3 rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                                                <Icon size={24} strokeWidth={2} />
+                                            </div>
+                                            <h3 className="text-lg font-bold text-text-primary tracking-tight">
+                                                {category}
+                                            </h3>
                                         </div>
-                                        <CardTitle className="text-base font-bold text-text-primary">
-                                            {category}
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="pt-6">
-                                        <div className="flex flex-wrap gap-2.5">
+
+                                        <div className="flex flex-wrap gap-2.5 mt-auto">
                                             {groupedSkills[category].map((skill: any) => {
                                                 const iconSlug = skill.name.toLowerCase().replace(/[ .]/g, "")
                                                     .replace("#", "sharp")
@@ -103,23 +115,26 @@ export const Skills = ({ skills }: SkillsProps) => {
                                                 return (
                                                     <Badge
                                                         key={skill.id}
-                                                        className="px-3 py-1.5 bg-background border border-border/60 text-text-secondary hover:border-primary/30 hover:text-primary hover:bg-primary/5 transition-all text-xs font-medium flex items-center gap-2 group/badge"
+                                                        variant="secondary"
+                                                        className="px-3 py-1.5 bg-secondary/30 text-text-secondary border border-transparent hover:border-primary/20 hover:bg-primary/5 hover:text-primary transition-all duration-300 cursor-default flex items-center gap-2 group/badge shadow-sm hover:shadow-md"
                                                     >
-                                                        <img
-                                                            src={`https://cdn.simpleicons.org/${iconSlug}`}
-                                                            alt=""
-                                                            className="w-3.5 h-3.5 opacity-60 group-hover/badge:opacity-100 transition-opacity grayscale group-hover/badge:grayscale-0"
-                                                            onError={(e) => {
-                                                                e.currentTarget.style.display = 'none';
-                                                            }}
-                                                        />
-                                                        {skill.name}
+                                                        <div className="relative w-4 h-4 flex items-center justify-center grayscale group-hover/badge:grayscale-0 transition-all duration-300 transform group-hover/badge:scale-110">
+                                                            <img
+                                                                src={`https://cdn.simpleicons.org/${iconSlug}`}
+                                                                alt=""
+                                                                className="w-full h-full object-contain opacity-70 group-hover/badge:opacity-100"
+                                                                onError={(e) => {
+                                                                    e.currentTarget.style.display = 'none';
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <span className="font-semibold text-[13px]">{skill.name}</span>
                                                     </Badge>
                                                 )
                                             })}
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                    </div>
+                                </SpotlightCard>
                             </motion.div>
                         )
                     })}
