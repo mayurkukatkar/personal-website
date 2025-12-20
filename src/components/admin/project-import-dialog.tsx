@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Github, Search, Loader2, Download, ExternalLink, Star, GitFork } from "lucide-react"
 import { fetchGithubRepos } from "@/lib/actions/github-actions"
-import { createProject } from "@/lib/actions/project-actions"
+import { createProject, importDraftProject } from "@/lib/actions/project-actions"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { toast } from "@/components/ui/use-toast"
@@ -74,15 +74,17 @@ export function ProjectImportDialog() {
             formData.append("featured", "false")
             formData.append("order", "0")
 
-            // Create (passing dummy prevState)
-            const result = await createProject(null, formData)
+            // Create using non-redirecting action
+            const result = await importDraftProject(formData)
 
-            // Note: createProject returns void on success due to redirect, but if it returns an object it's an error
-            // However, the action redirects on success which might close the socket or cause navigation.
-            // We should catch the redirect or handle the flow appropriately.
-            // Actually request is "create project", createProject action does redirect which is fine.
-            // But since this is a client component inside a dialog, a full redirect might feel jarring if we want to import multiple.
-            // For now, let's assume it redirects to /admin/projects which is where we are, so it just refreshes.
+            if (result?.error) {
+                let errorMessage = result.error
+                if (result.errors) {
+                    const fieldErrors = Object.values(result.errors).flat().join(", ")
+                    if (fieldErrors) errorMessage += `: ${fieldErrors}`
+                }
+                throw new Error(errorMessage)
+            }
 
             toast({
                 title: "Project Imported",
@@ -91,11 +93,11 @@ export function ProjectImportDialog() {
             setOpen(false) // Close on success
             router.refresh() // Force refresh data
 
-        } catch (err) {
+        } catch (err: any) {
             console.error(err)
             toast({
                 title: "Import Failed",
-                description: "Could not import project. Check console.",
+                description: err.message || "Could not import project.",
                 variant: "destructive"
             })
         } finally {

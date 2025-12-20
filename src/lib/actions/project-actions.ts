@@ -76,6 +76,49 @@ export async function createProject(prevState: any, formData: FormData) {
     redirect("/admin/projects")
 }
 
+export async function importDraftProject(formData: FormData) {
+    const validatedFields = ProjectSchema.safeParse({
+        title: formData.get("title"),
+        slug: formData.get("slug"),
+        shortDescription: formData.get("shortDescription"),
+        longDescription: formData.get("longDescription"),
+        techStack: formData.get("techStack"),
+        heroImage: formData.get("heroImage"),
+        galleryImages: formData.get("galleryImages"),
+        featured: formData.get("featured") === "on",
+        status: formData.get("status"),
+        order: formData.get("order"),
+        githubUrl: formData.get("githubUrl"),
+        liveUrl: formData.get("liveUrl"),
+    })
+
+    if (!validatedFields.success) {
+        return {
+            error: "Validation failed",
+            errors: validatedFields.error.flatten().fieldErrors,
+        }
+    }
+
+    try {
+        const galleryImages = validatedFields.data.galleryImages
+            ? JSON.parse(validatedFields.data.galleryImages)
+            : []
+
+        await prisma.project.create({
+            data: {
+                ...validatedFields.data,
+                galleryImages: galleryImages,
+                techStack: validatedFields.data.techStack ? JSON.parse(validatedFields.data.techStack) : [],
+            },
+        })
+        revalidatePath("/admin/projects")
+        return { success: true }
+    } catch (error) {
+        console.error("Import error details:", error)
+        return { error: "Failed to create project in database" }
+    }
+}
+
 export async function updateProject(id: string, prevState: any, formData: FormData) {
     const validatedFields = ProjectSchema.safeParse({
         title: formData.get("title"),
