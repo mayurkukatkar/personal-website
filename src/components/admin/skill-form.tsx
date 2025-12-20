@@ -14,6 +14,11 @@ export default function SkillForm({ skill, isEdit }: SkillFormProps) {
 
     return (
         <form action={dispatch} className="space-y-6 max-w-md">
+            {state?.error && (
+                <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
+                    {state.error}
+                </div>
+            )}
             <div className="space-y-4">
                 {/* Name */}
                 <div className="space-y-2">

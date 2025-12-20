@@ -24,21 +24,26 @@ export async function deleteSkill(id: string) {
 }
 
 export async function createSkill(prevState: any, formData: FormData) {
+    const rawProficiency = formData.get("proficiency")
+    const rawOrder = formData.get("order")
+
     const validatedFields = SkillSchema.safeParse({
         name: formData.get("name"),
         category: formData.get("category"),
-        icon: formData.get("icon"),
-        proficiency: formData.get("proficiency"),
-        order: formData.get("order"),
+        icon: formData.get("icon") || undefined,
+        proficiency: rawProficiency ? Number(rawProficiency) : undefined,
+        order: rawOrder ? Number(rawOrder) : undefined,
     })
 
     if (!validatedFields.success) {
-        return { error: "Validation failed" }
+        console.error("Validation failed:", validatedFields.error.flatten())
+        return { error: "Validation failed. Please check your inputs." }
     }
 
     try {
         await prisma.skill.create({ data: validatedFields.data })
     } catch (error) {
+        console.error("Create skill error:", error)
         return { error: "Failed to create skill" }
     }
 
@@ -47,12 +52,15 @@ export async function createSkill(prevState: any, formData: FormData) {
 }
 
 export async function updateSkill(id: string, prevState: any, formData: FormData) {
+    const rawProficiency = formData.get("proficiency")
+    const rawOrder = formData.get("order")
+
     const validatedFields = SkillSchema.safeParse({
         name: formData.get("name"),
         category: formData.get("category"),
-        icon: formData.get("icon"),
-        proficiency: formData.get("proficiency"),
-        order: formData.get("order"),
+        icon: formData.get("icon") || undefined,
+        proficiency: rawProficiency ? Number(rawProficiency) : undefined,
+        order: rawOrder ? Number(rawOrder) : undefined,
     })
 
     if (!validatedFields.success) {
