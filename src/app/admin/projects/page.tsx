@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Plus, Edit2, Trash2, Eye } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { deleteProject } from "@/lib/actions/project-actions"
+import { ProjectImportDialog } from "@/components/admin/project-import-dialog"
 
 export const dynamic = "force-dynamic"
 
@@ -15,13 +16,16 @@ export default async function ProjectsPage() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-text-primary">Projects</h1>
-                <Link
-                    href="/admin/projects/new"
-                    className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition"
-                >
-                    <Plus size={18} />
-                    Add Project
-                </Link>
+                <div className="flex gap-2">
+                    <ProjectImportDialog />
+                    <Link
+                        href="/admin/projects/new"
+                        className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition"
+                    >
+                        <Plus size={18} />
+                        Add Project
+                    </Link>
+                </div>
             </div>
 
             <div className="bg-white border border-border rounded-xl overflow-hidden shadow-sm">
