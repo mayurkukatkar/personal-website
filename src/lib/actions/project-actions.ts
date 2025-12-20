@@ -83,13 +83,13 @@ export async function importDraftProject(formData: FormData) {
         shortDescription: formData.get("shortDescription"),
         longDescription: formData.get("longDescription"),
         techStack: formData.get("techStack"),
-        heroImage: formData.get("heroImage"),
-        galleryImages: formData.get("galleryImages"),
+        heroImage: formData.get("heroImage") || undefined,
+        galleryImages: formData.get("galleryImages") || undefined,
         featured: formData.get("featured") === "on",
         status: formData.get("status"),
         order: formData.get("order"),
-        githubUrl: formData.get("githubUrl"),
-        liveUrl: formData.get("liveUrl"),
+        githubUrl: formData.get("githubUrl") || "",
+        liveUrl: formData.get("liveUrl") || "",
     })
 
     if (!validatedFields.success) {
