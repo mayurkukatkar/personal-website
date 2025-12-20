@@ -95,14 +95,28 @@ export const Skills = ({ skills }: SkillsProps) => {
                                     </CardHeader>
                                     <CardContent className="pt-6">
                                         <div className="flex flex-wrap gap-2.5">
-                                            {groupedSkills[category].map((skill: any) => (
-                                                <Badge
-                                                    key={skill.id}
-                                                    className="px-3 py-1.5 bg-background border border-border/60 text-text-secondary hover:border-primary/30 hover:text-primary hover:bg-primary/5 transition-all text-xs font-medium"
-                                                >
-                                                    {skill.name}
-                                                </Badge>
-                                            ))}
+                                            {groupedSkills[category].map((skill: any) => {
+                                                const iconSlug = skill.name.toLowerCase().replace(/[ .]/g, "")
+                                                    .replace("#", "sharp")
+                                                    .replace("++", "plusplus");
+
+                                                return (
+                                                    <Badge
+                                                        key={skill.id}
+                                                        className="px-3 py-1.5 bg-background border border-border/60 text-text-secondary hover:border-primary/30 hover:text-primary hover:bg-primary/5 transition-all text-xs font-medium flex items-center gap-2 group/badge"
+                                                    >
+                                                        <img
+                                                            src={`https://cdn.simpleicons.org/${iconSlug}`}
+                                                            alt=""
+                                                            className="w-3.5 h-3.5 opacity-60 group-hover/badge:opacity-100 transition-opacity grayscale group-hover/badge:grayscale-0"
+                                                            onError={(e) => {
+                                                                e.currentTarget.style.display = 'none';
+                                                            }}
+                                                        />
+                                                        {skill.name}
+                                                    </Badge>
+                                                )
+                                            })}
                                         </div>
                                     </CardContent>
                                 </Card>
