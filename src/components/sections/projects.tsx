@@ -2,31 +2,18 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { SpotlightCard } from "@/components/ui/spotlight-card";
-import { Github, ExternalLink, ArrowRight, Star, GitFork } from "lucide-react";
+import { Github, ExternalLink, ArrowRight } from "lucide-react";
+import { useState } from "react";
 
 interface ProjectsProps {
     projects: any[]
 }
 
-const container = {
-    hidden: { opacity: 0 },
-    show: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.2
-        }
-    }
-}
-
-const item = {
-    hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0 }
-}
-
 export const Projects = ({ projects }: ProjectsProps) => {
+    const [activeIndex, setActiveIndex] = useState(0);
+
     return (
         <section className="py-32 bg-background relative overflow-hidden" id="projects">
             {/* Background Gradients */}
@@ -43,116 +30,133 @@ export const Projects = ({ projects }: ProjectsProps) => {
                     </p>
                 </div>
 
-                <motion.div
-                    variants={container}
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10"
-                >
-                    {projects.map((project, index) => (
-                        <motion.div key={project.id} variants={item} className="h-full">
-                            <SpotlightCard className="h-full bg-white dark:bg-zinc-900 border-border/50 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group/card">
-                                {/* Image Section */}
-                                <div className="relative w-full h-56 overflow-hidden border-b border-border/10">
-                                    {project.heroImage ? (
-                                        <Image
-                                            src={project.heroImage}
-                                            alt={project.title}
-                                            fill
-                                            className="object-cover group-hover/card:scale-105 transition-transform duration-700 ease-out"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full bg-secondary/20 flex items-center justify-center text-text-secondary/30">
-                                            <span className="font-mono text-sm">No Preview</span>
+                <div className="flex flex-col lg:flex-row gap-8 relative">
+                    {/* Right Column (Sticky Image) - Hidden on mobile, visible on lg */}
+                    <div className="hidden lg:block lg:w-1/2 sticky top-20 h-[80vh] rounded-3xl overflow-hidden border border-border/50 bg-background/50 backdrop-blur-sm">
+                        <AnimatePresence mode="wait">
+                            {projects.map((project, index) => (
+                                activeIndex === index && (
+                                    <motion.div
+                                        key={project.id}
+                                        initial={{ opacity: 0, scale: 1.05 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                                        className="absolute inset-0 w-full h-full"
+                                    >
+                                        {project.heroImage ? (
+                                            <Image
+                                                src={project.heroImage}
+                                                alt={project.title}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full bg-secondary/20 flex items-center justify-center text-text-secondary/30">
+                                                <span className="font-mono text-lg">No Preview</span>
+                                            </div>
+                                        )}
+
+                                        {/* Overlay Gradient */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-80" />
+
+                                        {/* Floating Badges on Sticky Image */}
+                                        <div className="absolute top-6 left-6">
+                                            <Badge
+                                                variant={project.status === 'PUBLISHED' ? 'primary' : 'secondary'}
+                                                className="shadow-lg backdrop-blur-md px-4 py-1.5 text-sm font-bold rounded-full"
+                                            >
+                                                {project.status === 'PUBLISHED' ? 'Live System' : project.status}
+                                            </Badge>
                                         </div>
+                                        <div className="absolute bottom-6 left-6">
+                                            <Badge className="bg-white/90 text-black border-0 shadow-lg backdrop-blur-md px-4 py-1.5 text-sm font-bold rounded-full">
+                                                {project.techStack?.[0] || 'Project'}
+                                            </Badge>
+                                        </div>
+                                    </motion.div>
+                                )
+                            ))}
+                        </AnimatePresence>
+                    </div>
+
+                    {/* Left Column (Scrollable Text) */}
+                    <div className="w-full lg:w-1/2 lg:pl-10">
+                        {projects.map((project, index) => (
+                            <motion.div
+                                key={project.id}
+                                initial={{ opacity: 0, y: 50 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ margin: "-20% 0px -20% 0px", amount: 0.5 }}
+                                onViewportEnter={() => setActiveIndex(index)}
+                                className="min-h-[70vh] flex flex-col justify-center py-20 lg:py-0 border-b lg:border-none border-border/10 last:border-0"
+                            >
+                                {/* Mobile Image (Visible only on small screens) */}
+                                <div className="lg:hidden w-full h-64 rounded-2xl overflow-hidden mb-8 relative border border-border/50">
+                                    {project.heroImage ? (
+                                        <Image src={project.heroImage} alt={project.title} fill className="object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full bg-secondary/20" />
                                     )}
-
-                                    {/* Overlay Gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-60" />
-
-                                    {/* Top Left Badge: Status */}
                                     <div className="absolute top-4 left-4">
-                                        <Badge
-                                            variant={project.status === 'PUBLISHED' ? 'primary' : 'secondary'}
-                                            className="bg-white/90 text-black shadow-sm backdrop-blur-md px-3 py-1 text-xs font-bold rounded-full"
+                                        <Badge variant={project.status === 'PUBLISHED' ? 'primary' : 'secondary'}>
+                                            {project.status}
+                                        </Badge>
+                                    </div>
+                                </div>
+
+                                <h3
+                                    className={`text-3xl md:text-4xl font-bold mb-6 transition-colors duration-500 ${activeIndex === index ? "text-primary" : "text-text-primary"
+                                        }`}
+                                >
+                                    {project.title}
+                                </h3>
+
+                                <p className="text-lg text-text-secondary leading-relaxed mb-8">
+                                    {project.longDescription || project.shortDescription}
+                                </p>
+
+                                {/* Tech Stack */}
+                                <div className="flex flex-wrap gap-3 mb-10">
+                                    {(project.techStack || []).map((tech: string) => (
+                                        <span
+                                            key={tech}
+                                            className="px-4 py-1.5 rounded-full text-xs font-medium bg-secondary/50 text-text-primary border border-white/5"
                                         >
-                                            {project.status === 'PUBLISHED' ? 'Live' : project.status}
-                                        </Badge>
-                                    </div>
-
-                                    {/* Bottom Left Badge: Category/Primary Tech */}
-                                    <div className="absolute bottom-4 left-4">
-                                        <Badge className="bg-zinc-800/90 text-white border-0 backdrop-blur-md px-3 py-1 text-xs font-medium rounded-full">
-                                            {project.techStack?.[0] || 'Project'}
-                                        </Badge>
-                                    </div>
+                                            {tech}
+                                        </span>
+                                    ))}
                                 </div>
 
-                                {/* Content Section */}
-                                <div className="p-6 flex flex-col flex-1">
-                                    <div className="flex justify-between items-start mb-3">
-                                        <h3 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 group-hover/card:text-primary transition-colors">
-                                            {project.title}
-                                        </h3>
-                                    </div>
-
-                                    <p className="text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
-                                        {project.shortDescription}
-                                    </p>
-
-                                    {/* Tech Stack Pills */}
-                                    <div className="flex flex-wrap gap-2 mb-8">
-                                        {(project.techStack || []).slice(0, 4).map((tech: string) => (
-                                            <span
-                                                key={tech}
-                                                className="px-3 py-1 rounded-full text-[11px] font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300"
-                                            >
-                                                {tech}
-                                            </span>
-                                        ))}
-                                        {(project.techStack || []).length > 4 && (
-                                            <span className="px-2 py-1 text-[11px] text-zinc-500 font-medium">
-                                                +{(project.techStack || []).length - 4}
-                                            </span>
-                                        )}
-                                    </div>
-
-                                    {/* Footer / Actions */}
-                                    <div className="mt-auto pt-6 border-t border-border/10 flex items-center gap-4">
-                                        {project.githubUrl && (
-                                            <a
-                                                href={project.githubUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border/40 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-sm font-semibold text-text-primary"
-                                                onClick={(e) => e.stopPropagation()}
-                                            >
-                                                <Github size={18} />
-                                                Code
-                                            </a>
-                                        )}
-                                        {project.liveUrl && (
-                                            <a
-                                                href={project.liveUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-opacity text-sm font-semibold"
-                                                onClick={(e) => e.stopPropagation()}
-                                            >
-                                                {/* Play icon lookalike for 'Demo' */}
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                                                    <path fillRule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z" clipRule="evenodd" />
-                                                </svg>
-                                                Demo
-                                            </a>
-                                        )}
-                                    </div>
+                                {/* Actions */}
+                                <div className="flex flex-wrap gap-4">
+                                    {project.liveUrl && (
+                                        <a
+                                            href={project.liveUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold shadow-lg hover:shadow-primary/20 hover:scale-105 transition-all text-sm"
+                                        >
+                                            <ExternalLink size={18} />
+                                            Visit Live Demo
+                                        </a>
+                                    )}
+                                    {project.githubUrl && (
+                                        <a
+                                            href={project.githubUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-secondary hover:bg-secondary/80 text-text-primary font-semibold transition-all text-sm border border-border/50"
+                                        >
+                                            <Github size={18} />
+                                            View Source
+                                        </a>
+                                    )}
                                 </div>
-                            </SpotlightCard>
-                        </motion.div>
-                    ))}
-                </motion.div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </section>
     );
